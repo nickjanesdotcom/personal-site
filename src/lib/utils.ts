@@ -46,19 +46,19 @@ export async function shareContent(data: {
   if (navigator.share) {
     try {
       await navigator.share(data)
-      return true
+      return { success: true, method: 'share' }
     } catch (err) {
       console.log('Share cancelled')
-      return false
+      return { success: false, method: 'share' }
     }
   }
 
   // Fallback to clipboard
   try {
     await navigator.clipboard.writeText(data.url || data.text)
-    return true
+    return { success: true, method: 'clipboard' }
   } catch (err) {
     console.error('Failed to copy to clipboard:', err)
-    return false
+    return { success: false, method: 'clipboard' }
   }
 }

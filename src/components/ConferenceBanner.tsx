@@ -127,7 +127,7 @@ export default function ConferenceBanner({
   if (showExchangeForm) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white dark:bg-gray-900 text-black dark:text-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-auto relative animate-in zoom-in-95 duration-300">
+        <div className="bg-white dark:bg-dark-gray text-black dark:text-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-auto relative animate-in zoom-in-95 duration-300">
           {/* Close Button */}
           <button
             onClick={() => {
@@ -159,7 +159,7 @@ export default function ConferenceBanner({
                     type="text"
                     name="name"
                     placeholder="Your name *"
-                    className={`w-full p-3 text-sm border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-gray-800 ${
+                    className={`w-full p-3 text-sm border rounded-lg focus:outline-none focus:ring-2 bg-white dark:bg-dark-gray ${
                       formErrors.name
                         ? 'border-red-500 focus:ring-red-500'
                         : 'border-gray-200 dark:border-gray-600 focus:ring-black dark:focus:ring-white'
@@ -174,7 +174,7 @@ export default function ConferenceBanner({
                   type="text"
                   name="company"
                   placeholder="Company (optional)"
-                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800"
+                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-dark-gray"
                 />
 
                 <div className="text-xs text-gray-500 dark:text-gray-400 mb-3">
@@ -185,28 +185,28 @@ export default function ConferenceBanner({
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800"
+                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-dark-gray"
                 />
 
                 <input
                   type="tel"
                   name="phone"
                   placeholder="Phone"
-                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800"
+                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-dark-gray"
                 />
 
                 <input
                   type="text"
                   name="twitter"
                   placeholder="Twitter/X handle (e.g., @username)"
-                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800"
+                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-dark-gray"
                 />
 
                 <input
                   type="url"
                   name="linkedin"
                   placeholder="LinkedIn profile URL"
-                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800"
+                  className="w-full p-3 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-dark-gray"
                 />
 
                 {formErrors.connection && (
@@ -277,7 +277,7 @@ export default function ConferenceBanner({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-900 text-black dark:text-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-auto relative animate-in zoom-in-95 duration-300">
+      <div className="bg-white dark:bg-dark-gray text-black dark:text-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-auto relative animate-in zoom-in-95 duration-300">
         {/* Close Button */}
         <button
           onClick={handleDismiss}

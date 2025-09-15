@@ -34,14 +34,14 @@ export default function ResourceGrid() {
             className={`group block p-6 rounded-2xl border-2 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
               resource.featured
                 ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200'
-                : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white hover:border-gray-300 dark:hover:border-gray-600'
+                : 'border-gray-200 dark:border-white bg-white dark:bg-dark-gray text-black dark:text-white hover:border-gray-300 dark:hover:border-gray-600'
             }`}
           >
             <div className="flex items-start justify-between mb-4">
               <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
                 resource.featured
                   ? 'bg-white dark:bg-black text-black dark:text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  : 'bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
               }`}>
                 {resource.category}
               </span>

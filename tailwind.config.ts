@@ -14,6 +14,7 @@ const config: Config = {
       },
       colors: {
         accent: '#3b82f6', // Blue accent color - can be customized
+        'dark-gray': '#2A2A2A', // Custom dark gray for dark mode
       },
     },
   },

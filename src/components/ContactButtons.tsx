@@ -13,6 +13,7 @@ const CONTACT_DATA = {
 
 export default function ContactButtons() {
   const [isSharing, setIsSharing] = useState(false)
+  const [shareMessage, setShareMessage] = useState('')
 
   const handleSaveContact = async () => {
     const vcard = generateVCard(CONTACT_DATA)
@@ -28,6 +29,7 @@ export default function ContactButtons() {
 
   const handleShareCard = async () => {
     setIsSharing(true)
+    setShareMessage('')
 
     const shareData = {
       title: `${CONTACT_DATA.name} - Digital Business Card`,
@@ -35,15 +37,23 @@ export default function ContactButtons() {
       url: window.location.href
     }
 
-    const shared = await shareContent(shareData)
+    const result = await shareContent(shareData)
 
-    if (shared) {
+    if (result.success) {
+      if (result.method === 'clipboard') {
+        setShareMessage('URL copied to clipboard!')
+        setTimeout(() => setShareMessage(''), 3000)
+      }
+
       // Track analytics
       await fetch('/api/analytics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'share_card' })
       }).catch(() => {}) // Silent fail for analytics
+    } else {
+      setShareMessage('Failed to share')
+      setTimeout(() => setShareMessage(''), 3000)
     }
 
     setIsSharing(false)
@@ -52,28 +62,35 @@ export default function ContactButtons() {
   return (
     <div className="space-y-4">
       {/* Primary Buttons */}
-      <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+      <div className="flex flex-row gap-3 justify-center mb-8">
         <button
           onClick={handleSaveContact}
-          className="px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center gap-3"
+          className="px-4 py-3 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center gap-2 text-sm"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          Save My Contact
+          Save Contact
         </button>
 
         <button
           onClick={handleShareCard}
           disabled={isSharing}
-          className="px-10 py-5 bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 flex items-center justify-center gap-3"
+          className="px-4 py-3 bg-gray-100 dark:bg-dark-gray text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 flex items-center justify-center gap-2 text-sm"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
           </svg>
-          {isSharing ? 'Sharing...' : 'Share My Card'}
+          {isSharing ? 'Sharing...' : 'Share Contact'}
         </button>
       </div>
+
+      {/* Share Message */}
+      {shareMessage && (
+        <div className="text-center mb-4">
+          <p className="text-green-600 dark:text-green-400 font-medium">{shareMessage}</p>
+        </div>
+      )}
 
 
       {/* Project/Company Links */}
@@ -84,7 +101,7 @@ export default function ContactButtons() {
             href="https://igeekuplay.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-4 bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left"
+            className="px-6 py-4 bg-gray-100 dark:bg-dark-gray text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left border-2 border-gray-200 dark:border-white"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 relative flex-shrink-0">
@@ -106,7 +123,7 @@ export default function ContactButtons() {
             href="https://dialed.tech"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-4 bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left"
+            className="px-6 py-4 bg-gray-100 dark:bg-dark-gray text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left border-2 border-gray-200 dark:border-white"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 relative flex-shrink-0">
@@ -128,7 +145,7 @@ export default function ContactButtons() {
             href="https://3d-icons.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-4 bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left"
+            className="px-6 py-4 bg-gray-100 dark:bg-dark-gray text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left border-2 border-gray-200 dark:border-white"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 relative flex-shrink-0">
@@ -150,7 +167,7 @@ export default function ContactButtons() {
             href="https://notion-erd.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-4 bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left"
+            className="px-6 py-4 bg-gray-100 dark:bg-dark-gray text-black dark:text-white rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left border-2 border-gray-200 dark:border-white"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 relative flex-shrink-0">

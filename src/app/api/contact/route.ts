@@ -138,30 +138,13 @@ export async function POST(req: Request) {
 
             console.log('File sent successfully')
 
-            // Step 3: Get the final file URL after upload
-            const finalFileResponse = await fetch(`https://api.notion.com/v1/file_uploads/${uploadData.id}`, {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${process.env.NOTION_TOKEN}`,
-                'Notion-Version': '2022-06-28'
-              }
-            })
-
-            if (!finalFileResponse.ok) {
-              throw new Error(`Failed to get file details: ${finalFileResponse.statusText}`)
-            }
-
-            const finalFileData = await finalFileResponse.json()
-            console.log('Final file data:', finalFileData)
-
-            // Step 4: Add uploaded file to Notion database
+            // Step 3: Add uploaded file to Notion database using file_upload type
             notionProperties.Selfie = {
               files: [{
                 name: filename,
-                type: 'file',
-                file: {
-                  url: finalFileData.url,
-                  expiry_time: finalFileData.expiry_time
+                type: 'file_upload',
+                file_upload: {
+                  id: uploadData.id
                 }
               }]
             }
