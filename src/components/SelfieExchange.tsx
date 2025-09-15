@@ -178,8 +178,8 @@ export default function SelfieExchange() {
   return (
     <div className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2">🤳 Take a Selfie & Share Details</h2>
-          <p className="text-gray-600">
+          <h2 className="text-2xl font-bold mb-2 text-black dark:text-white">🤳 Take a Selfie & Share Details</h2>
+          <p className="text-gray-600 dark:text-gray-300">
             {isMobile
               ? "Use your camera app for the best quality selfie!"
               : "Let's capture this moment and exchange contact information!"
@@ -189,7 +189,7 @@ export default function SelfieExchange() {
 
         {!photo ? (
           <div className="space-y-4">
-            <div className="relative bg-gray-100 rounded-2xl overflow-hidden">
+            <div className="relative bg-gray-100 dark:bg-gray-800 rounded-2xl overflow-hidden">
               <video
                 ref={videoRef}
                 autoPlay
@@ -198,13 +198,13 @@ export default function SelfieExchange() {
                 style={{ display: cameraStarted ? 'block' : 'none' }}
               />
               {!cameraStarted && (
-                <div className="w-full aspect-[4/3] flex items-center justify-center bg-gray-100">
+                <div className="w-full aspect-[4/3] flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                   <div className="text-center">
-                    <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <p className="text-gray-500">Camera preview will appear here</p>
+                    <p className="text-gray-500 dark:text-gray-400">Camera preview will appear here</p>
                   </div>
                 </div>
               )}
@@ -228,14 +228,14 @@ export default function SelfieExchange() {
                   {isMobile ? (
                     <button
                       onClick={openNativeCamera}
-                      className="px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+                      className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                     >
                       📱 Open Camera
                     </button>
                   ) : (
                     <button
                       onClick={startCamera}
-                      className="px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+                      className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                     >
                       💻 Start Camera
                     </button>
@@ -243,7 +243,7 @@ export default function SelfieExchange() {
                   {!isMobile && (
                     <button
                       onClick={openNativeCamera}
-                      className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+                      className="px-6 py-3 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-white rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors"
                     >
                       📁 Upload Photo
                     </button>
@@ -252,7 +252,7 @@ export default function SelfieExchange() {
               ) : (
                 <button
                   onClick={takePhoto}
-                  className="px-6 py-3 bg-accent text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors"
+                  className="px-6 py-3 bg-accent dark:bg-accent text-white rounded-xl font-semibold hover:bg-blue-600 dark:hover:bg-blue-600 transition-colors"
                 >
                   📸 Take Photo
                 </button>
@@ -271,7 +271,7 @@ export default function SelfieExchange() {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={retakePhoto}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-white rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors"
               >
                 Retake
               </button>
@@ -287,7 +287,7 @@ export default function SelfieExchange() {
                 name="name"
                 placeholder="Your name"
                 required
-                className="w-full p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                className="w-full p-4 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent bg-white dark:bg-gray-700 text-black dark:text-white"
               />
             </div>
 
@@ -297,14 +297,14 @@ export default function SelfieExchange() {
                 name="email"
                 placeholder="Your email"
                 required
-                className="w-full p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                className="w-full p-4 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent bg-white dark:bg-gray-700 text-black dark:text-white"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full p-4 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 disabled:bg-gray-400 transition-colors"
+              className="w-full p-4 bg-black dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 disabled:bg-gray-400 dark:disabled:bg-gray-500 transition-colors"
             >
               {loading ? "Sending..." : "Share & Get Selfie"}
             </button>
@@ -312,9 +312,9 @@ export default function SelfieExchange() {
         ) : null}
 
         {submitted && (
-          <div className="text-center p-6 bg-green-50 rounded-2xl">
+          <div className="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-2xl">
             <div className="text-4xl mb-2">✅</div>
-            <p className="text-green-700 font-semibold">
+            <p className="text-green-700 dark:text-green-400 font-semibold">
               Selfie & details shared — check your inbox!
             </p>
           </div>

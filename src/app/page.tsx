@@ -56,7 +56,7 @@ export default function HomePage() {
       {/* Selfie Exchange Popup */}
       {showSelfiePopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-3xl max-w-xl w-full mx-auto relative">
+          <div className="bg-white dark:bg-dark-gray rounded-3xl max-w-xl w-full mx-auto relative">
             {/* Close Button */}
             <button
               onClick={() => setShowSelfiePopup(false)}
