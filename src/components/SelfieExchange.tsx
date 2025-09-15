@@ -1,19 +1,36 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 
 export default function SelfieExchange() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [photo, setPhoto] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [cameraStarted, setCameraStarted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase()
+      const mobileKeywords = ['mobile', 'android', 'iphone', 'ipad', 'tablet', 'blackberry', 'windows phone']
+      return mobileKeywords.some(keyword => userAgent.includes(keyword)) ||
+             (window.innerWidth <= 768 && 'ontouchstart' in window)
+    }
+    setIsMobile(checkMobile())
+  }, [])
 
   async function startCamera() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user' }
+        video: {
+          facingMode: 'user',
+          width: { ideal: 1920, min: 640 },
+          height: { ideal: 1080, min: 480 }
+        }
       })
       if (videoRef.current) {
         videoRef.current.srcObject = stream
@@ -27,13 +44,27 @@ export default function SelfieExchange() {
 
   function takePhoto() {
     if (canvasRef.current && videoRef.current) {
-      const ctx = canvasRef.current.getContext("2d")
+      const video = videoRef.current
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext("2d")
+
       if (ctx) {
-        ctx.drawImage(videoRef.current, 0, 0, 320, 240)
-        setPhoto(canvasRef.current.toDataURL("image/png"))
+        // Use video's actual dimensions for higher quality
+        const videoWidth = video.videoWidth || video.clientWidth
+        const videoHeight = video.videoHeight || video.clientHeight
+
+        // Set canvas to match video resolution
+        canvas.width = videoWidth
+        canvas.height = videoHeight
+
+        // Draw the image
+        ctx.drawImage(video, 0, 0, videoWidth, videoHeight)
+
+        // Convert to high quality JPEG
+        setPhoto(canvas.toDataURL("image/jpeg", 0.9))
 
         // Stop camera stream
-        const stream = videoRef.current.srcObject as MediaStream
+        const stream = video.srcObject as MediaStream
         if (stream) {
           stream.getTracks().forEach(track => track.stop())
         }
@@ -42,9 +73,71 @@ export default function SelfieExchange() {
     }
   }
 
+  // Handle file input (native camera)
+  function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file.')
+      return
+    }
+
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Image is too large. Please choose an image under 10MB.')
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const img = new Image()
+      img.onload = () => {
+        if (canvasRef.current) {
+          const canvas = canvasRef.current
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            // Resize if image is too large (max 1920x1080)
+            let { width, height } = img
+            const maxWidth = 1920
+            const maxHeight = 1080
+
+            if (width > maxWidth || height > maxHeight) {
+              const ratio = Math.min(maxWidth / width, maxHeight / height)
+              width *= ratio
+              height *= ratio
+            }
+
+            canvas.width = width
+            canvas.height = height
+            ctx.drawImage(img, 0, 0, width, height)
+            setPhoto(canvas.toDataURL("image/jpeg", 0.9))
+          }
+        }
+      }
+      img.onerror = () => {
+        alert('Failed to load image. Please try a different photo.')
+      }
+      img.src = e.target?.result as string
+    }
+    reader.onerror = () => {
+      alert('Failed to read file. Please try again.')
+    }
+    reader.readAsDataURL(file)
+  }
+
+  // Open native camera
+  function openNativeCamera() {
+    fileInputRef.current?.click()
+  }
+
   function retakePhoto() {
     setPhoto(null)
-    startCamera()
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+    // Don't auto-start camera, let user choose method again
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -87,7 +180,10 @@ export default function SelfieExchange() {
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-2">🤳 Take a Selfie & Share Details</h2>
           <p className="text-gray-600">
-            Let&apos;s capture this moment and exchange contact information!
+            {isMobile
+              ? "Use your camera app for the best quality selfie!"
+              : "Let's capture this moment and exchange contact information!"
+            }
           </p>
         </div>
 
@@ -98,8 +194,6 @@ export default function SelfieExchange() {
                 ref={videoRef}
                 autoPlay
                 playsInline
-                width="320"
-                height="240"
                 className="w-full aspect-[4/3] object-cover"
                 style={{ display: cameraStarted ? 'block' : 'none' }}
               />
@@ -116,22 +210,51 @@ export default function SelfieExchange() {
               )}
             </div>
 
-            <canvas ref={canvasRef} width="320" height="240" className="hidden" />
+            {/* Hidden file input for native camera */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+
+            <canvas ref={canvasRef} className="hidden" />
 
             <div className="flex gap-3 justify-center">
               {!cameraStarted ? (
-                <button
-                  onClick={startCamera}
-                  className="px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
-                >
-                  Start Camera
-                </button>
+                <>
+                  {isMobile ? (
+                    <button
+                      onClick={openNativeCamera}
+                      className="px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+                    >
+                      📱 Open Camera
+                    </button>
+                  ) : (
+                    <button
+                      onClick={startCamera}
+                      className="px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+                    >
+                      💻 Start Camera
+                    </button>
+                  )}
+                  {!isMobile && (
+                    <button
+                      onClick={openNativeCamera}
+                      className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+                    >
+                      📁 Upload Photo
+                    </button>
+                  )}
+                </>
               ) : (
                 <button
                   onClick={takePhoto}
                   className="px-6 py-3 bg-accent text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors"
                 >
-                  Take Photo
+                  📸 Take Photo
                 </button>
               )}
             </div>
